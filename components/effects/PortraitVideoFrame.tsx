@@ -1,9 +1,22 @@
 "use client";
 
-import { memo } from "react";
-import { motion } from "framer-motion";
+import { memo, useEffect, useRef, useState } from "react";
+import { m, useReducedMotion } from "framer-motion";
+import { riseIn } from "@/lib/motion";
+import { useGpuLayerStyle } from "@/components/motion/useGpuLayerStyle";
 
-/** Portrait phone frame with holographic bezel for AI demo video. */
+const ScanLine = memo(function ScanLine() {
+  const gpu = useGpuLayerStyle();
+  return (
+    <m.div
+      className="pointer-events-none absolute inset-x-0 top-0 hidden h-16 bg-gradient-to-b from-cyan-300/12 to-transparent md:block"
+      style={gpu}
+      animate={{ y: ["0%", "110%"] }}
+      transition={{ duration: 4.5, repeat: Infinity, ease: "linear" }}
+    />
+  );
+});
+
 function PortraitVideoFrameComponent({
   src,
   caption,
@@ -11,68 +24,60 @@ function PortraitVideoFrameComponent({
   src: string;
   caption?: string;
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [loadVideo, setLoadVideo] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const gpu = useGpuLayerStyle();
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setLoadVideo(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "140px 0px", threshold: 0.05 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.92, y: 24 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    <m.div
+      ref={wrapRef}
+      {...riseIn}
+      style={gpu}
       className="mx-auto flex w-full max-w-[280px] flex-col items-center sm:max-w-[300px]"
     >
       <div className="relative">
-        {/* Glow aura */}
-        <div className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-cyan-400/20 blur-2xl" />
-        <motion.div
-          className="pointer-events-none absolute -inset-3 rounded-[2.2rem] border border-cyan-300/20"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
+        <div className="pointer-events-none absolute -inset-6 hidden rounded-[2.5rem] bg-cyan-400/15 blur-2xl md:block" />
 
-        {/* Phone chassis */}
-        <div className="holo-phone relative overflow-hidden rounded-[2rem] border border-cyan-200/30 bg-[#020617] p-2 shadow-[0_0_40px_rgba(34,211,238,0.25),inset_0_0_30px_rgba(34,211,238,0.08)]">
-          {/* Notch */}
+        <div className="holo-phone relative overflow-hidden rounded-[2rem] border border-cyan-200/30 bg-[#020617] p-2 shadow-[0_0_32px_rgba(34,211,238,0.2)]">
           <div className="absolute left-1/2 top-3 z-20 h-5 w-24 -translate-x-1/2 rounded-full bg-black/90" />
 
-          {/* Portrait viewport 9:16 */}
           <div className="relative aspect-[9/16] overflow-hidden rounded-[1.55rem] bg-black">
-            <video
-              className="h-full w-full object-cover"
-              controls
-              playsInline
-              preload="metadata"
-              poster=""
-            >
-              <source src={src} type="video/mp4" />
-            </video>
-
-            {/* Scan overlay */}
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(34,211,238,0.04)_50%)] bg-[length:100%_4px] mix-blend-overlay" />
-            <motion.div
-              className="pointer-events-none absolute inset-x-0 h-16 bg-gradient-to-b from-cyan-300/15 to-transparent"
-              animate={{ top: ["0%", "100%"] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: "linear" }}
-            />
+            {loadVideo ? (
+              <video
+                className="h-full w-full object-cover"
+                controls
+                playsInline
+                preload="metadata"
+              >
+                <source src={src} type="video/mp4" />
+              </video>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-[#030712] font-mono text-[10px] tracking-wider text-cyan-300/50">
+                AI DEMO
+              </div>
+            )}
+            {!reduceMotion ? <ScanLine /> : null}
           </div>
 
-          {/* Home indicator */}
           <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-white/25" />
         </div>
-
-        {/* Floating tech badges */}
-        <motion.span
-          className="absolute -left-10 top-16 hidden rounded-md border border-cyan-400/40 bg-cyan-950/80 px-2 py-1 font-mono text-[10px] text-cyan-200 backdrop-blur sm:block"
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        >
-          AI.VISION
-        </motion.span>
-        <motion.span
-          className="absolute -right-12 bottom-24 hidden rounded-md border border-teal-400/40 bg-teal-950/80 px-2 py-1 font-mono text-[10px] text-teal-200 backdrop-blur sm:block"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 3.5, repeat: Infinity }}
-        >
-          LIVE.FEED
-        </motion.span>
       </div>
 
       {caption ? (
@@ -80,7 +85,7 @@ function PortraitVideoFrameComponent({
           {caption}
         </p>
       ) : null}
-    </motion.div>
+    </m.div>
   );
 }
 

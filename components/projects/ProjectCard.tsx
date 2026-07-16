@@ -1,21 +1,17 @@
 "use client";
 
 import { memo, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  ExternalLink,
-  Images,
-  Sparkles,
-} from "lucide-react";
+import { m } from "framer-motion";
+import { ExternalLink, Images, Sparkles } from "lucide-react";
 import type { Project } from "@/data/types";
 import {
   BrowserFrame,
   PhoneFrame,
 } from "@/components/projects/DeviceFrames";
-import {
-  GalleryThumbs,
-  ImageLightbox,
-} from "@/components/projects/ImageLightbox";
+import { ImageLightbox } from "@/components/projects/ImageLightbox";
+import { LazyMount } from "@/components/LazyMount";
+import { riseIn } from "@/lib/motion";
+import { useGpuLayerStyle } from "@/components/motion/useGpuLayerStyle";
 
 function useFrameType(project: Project): "phone" | "browser" {
   return useMemo(() => {
@@ -33,84 +29,74 @@ function ProjectCardComponent({
   project,
   delay = 0,
   featuredLayout = false,
+  priorityCover = false,
 }: {
   project: Project;
   delay?: number;
   featuredLayout?: boolean;
+  priorityCover?: boolean;
 }) {
   const images = project.imageUrls ?? [];
-  const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const frame = useFrameType(project);
-  const cover = images[active] ?? images[0];
+  const cover = images[0];
+  const gpu = useGpuLayerStyle();
 
   return (
     <>
-      <motion.article
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
-        className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#060d1a]/75 p-[1px] backdrop-blur-xl ${
+      <m.article
+        {...riseIn}
+        transition={{ ...riseIn.transition, delay }}
+        style={gpu}
+        className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#060d1a]/90 p-[1px] ${
           featuredLayout ? "sm:col-span-2" : ""
         }`}
       >
-        <div className="holo-card-border absolute inset-0 rounded-2xl opacity-80" />
+        <div className="holo-card-border absolute inset-0 rounded-2xl opacity-70" />
         <div
-          className={`relative grid gap-6 rounded-2xl bg-[#060d1a]/90 p-5 sm:p-6 ${
+          className={`relative grid gap-6 rounded-2xl bg-[#060d1a] p-5 sm:p-6 ${
             featuredLayout
               ? "lg:grid-cols-[1.05fr_0.95fr] lg:items-center"
               : "md:grid-cols-[0.9fr_1.1fr] md:items-center"
           }`}
         >
-          {/* Media */}
           <div className="relative">
             {cover ? (
-              <button
-                type="button"
-                className="block w-full text-left"
-                onClick={() => setLightbox(true)}
-                aria-label={`Open ${project.name} gallery`}
-              >
-                {frame === "phone" ? (
-                  <div className="flex justify-center py-2">
-                    <PhoneFrame
+              <LazyMount minHeight={frame === "phone" ? 320 : 200} rootMargin="180px 0px">
+                <button
+                  type="button"
+                  className="block w-full text-left"
+                  onClick={() => setLightbox(true)}
+                  aria-label={`Open ${project.name} gallery`}
+                >
+                  {frame === "phone" ? (
+                    <div className="flex justify-center py-2">
+                      <PhoneFrame
+                        src={cover}
+                        alt={project.name}
+                        priority={priorityCover}
+                      />
+                    </div>
+                  ) : (
+                    <BrowserFrame
                       src={cover}
                       alt={project.name}
-                      priority={false}
+                      priority={priorityCover}
+                      urlLabel={
+                        project.liveUrl?.replace(/^https?:\/\//, "") ??
+                        `${project.name.toLowerCase().replace(/\s+/g, "")}.app`
+                      }
                     />
-                  </div>
-                ) : (
-                  <BrowserFrame
-                    src={cover}
-                    alt={project.name}
-                    priority={false}
-                    urlLabel={
-                      project.liveUrl?.replace(/^https?:\/\//, "") ??
-                      `${project.name.toLowerCase().replace(/\s+/g, "")}.app`
-                    }
-                  />
-                )}
-              </button>
+                  )}
+                </button>
+              </LazyMount>
             ) : (
               <div className="flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-cyan-500/20 bg-cyan-950/20">
                 <Sparkles className="h-8 w-8 text-cyan-500/40" />
               </div>
             )}
-
-            {images.length > 1 ? (
-              <div className="mt-4">
-                <GalleryThumbs
-                  images={images.slice(0, 5)}
-                  alt={project.name}
-                  active={Math.min(active, 4)}
-                  onSelect={setActive}
-                />
-              </div>
-            ) : null}
           </div>
 
-          {/* Copy */}
           <div className="relative z-10 flex min-h-0 flex-col">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               {project.featured ? (
@@ -204,12 +190,12 @@ function ProjectCardComponent({
             </div>
           </div>
         </div>
-      </motion.article>
+      </m.article>
 
-      {images.length > 0 ? (
+      {images.length > 0 && lightbox ? (
         <ImageLightbox
           images={images}
-          startIndex={active}
+          startIndex={0}
           alt={project.name}
           open={lightbox}
           onClose={() => setLightbox(false)}

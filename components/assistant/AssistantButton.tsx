@@ -1,68 +1,83 @@
 "use client";
 
 import { memo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m, useWillChange } from "framer-motion";
 import { Sparkles, MessageCircle } from "lucide-react";
 import { useAssistant } from "@/context/AssistantContext";
 
+/** Isolated loop layers — not re-created when parent context re-renders. */
+const FabPulseRings = memo(function FabPulseRings() {
+  const willChange = useWillChange();
+  return (
+    <>
+      <m.span
+        className="absolute inset-0 rounded-full bg-white/50"
+        style={{ willChange }}
+        animate={{ scale: [1, 1.55, 1], opacity: [0.65, 0, 0.65] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
+      />
+      <m.span
+        className="absolute -inset-1 rounded-full bg-cyan-200/35"
+        style={{ willChange }}
+        animate={{ scale: [1, 1.35, 1], opacity: [0.45, 0, 0.45] }}
+        transition={{
+          duration: 2.2,
+          repeat: Infinity,
+          delay: 0.35,
+          ease: "easeOut",
+        }}
+      />
+    </>
+  );
+});
+
+const ChipSheen = memo(function ChipSheen() {
+  const willChange = useWillChange();
+  return (
+    <m.span
+      className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/25 to-transparent"
+      style={{ willChange }}
+      animate={{ x: ["-120%", "120%"] }}
+      transition={{
+        duration: 2.6,
+        repeat: Infinity,
+        ease: "easeInOut",
+        repeatDelay: 1,
+      }}
+    />
+  );
+});
+
 function AssistantButtonComponent() {
   const { toggle, isOpen } = useAssistant();
+  const willChange = useWillChange();
 
   return (
-    <motion.div
-      className="fixed bottom-5 right-4 z-50 flex items-center gap-3 sm:bottom-6 sm:right-6"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.35 }}
-    >
+    <div className="fixed bottom-5 right-4 z-50 flex items-center gap-3 sm:bottom-6 sm:right-6">
       <AnimatePresence>
         {!isOpen ? (
-          <motion.button
+          <m.button
             type="button"
             key="assistant-label"
             onClick={toggle}
-            initial={{ opacity: 0, x: 16, scale: 0.9 }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              y: [0, -5, 0],
-            }}
-            exit={{ opacity: 0, x: 10, scale: 0.92 }}
+            initial={{ opacity: 0, x: 12, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0, scale: 1, y: [0, -4, 0] }}
+            exit={{ opacity: 0, x: 8, scale: 0.96 }}
             transition={{
-              opacity: { duration: 0.25 },
-              x: { type: "spring", stiffness: 320, damping: 22 },
-              y: { duration: 2.2, repeat: Infinity, ease: "easeInOut" },
+              opacity: { duration: 0.2 },
+              x: { duration: 0.25 },
+              y: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
             }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-            className="relative max-w-[220px] overflow-hidden rounded-2xl border border-white/40 bg-white px-3.5 py-2.5 text-left shadow-[0_0_36px_rgba(255,255,255,0.35),0_8px_28px_rgba(0,0,0,0.4)] sm:max-w-none"
+            style={{ willChange }}
+            whileTap={{ scale: 0.97 }}
+            className="relative max-w-[220px] overflow-hidden rounded-2xl border border-white/40 bg-white px-3.5 py-2.5 text-left shadow-[0_8px_28px_rgba(0,0,0,0.4)] sm:max-w-none"
             aria-label="Open Baber's AI Portfolio Assistant"
           >
-            <motion.span
-              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent"
-              animate={{ x: ["-120%", "120%"] }}
-              transition={{
-                duration: 2.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 0.8,
-              }}
-            />
-            <motion.span
-              className="pointer-events-none absolute -inset-1 rounded-2xl border border-white/50"
-              animate={{ opacity: [0.9, 0.2, 0.9], scale: [1, 1.06, 1] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            />
-
+            <ChipSheen />
             <div className="relative z-10 flex items-start gap-2">
-              <motion.span
-                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#030712] text-cyan-300"
-                animate={{ rotate: [0, -12, 12, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              >
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#030712] text-cyan-300">
                 <MessageCircle className="h-4 w-4" />
-              </motion.span>
+              </span>
               <div>
                 <p className="font-display text-xs font-bold tracking-wide text-[#030712] sm:text-[13px]">
                   Ask Baber's AI
@@ -72,11 +87,11 @@ function AssistantButtonComponent() {
                 </p>
               </div>
             </div>
-          </motion.button>
+          </m.button>
         ) : null}
       </AnimatePresence>
 
-      <motion.button
+      <m.button
         type="button"
         onClick={toggle}
         aria-label={
@@ -84,41 +99,23 @@ function AssistantButtonComponent() {
             ? "Close Baber's AI Portfolio Assistant"
             : "Open Baber's AI Portfolio Assistant"
         }
-        className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.92 }}
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full sm:h-16 sm:w-16"
+        style={{ willChange }}
+        whileTap={{ scale: 0.94 }}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
       >
-        <motion.span
-          className="absolute inset-0 rounded-full bg-white/50"
-          animate={{ scale: [1, 1.7, 1], opacity: [0.75, 0, 0.75] }}
-          transition={{ duration: 1.8, repeat: Infinity }}
-        />
-        <motion.span
-          className="absolute -inset-1 rounded-full bg-cyan-200/40"
-          animate={{ scale: [1, 1.45, 1], opacity: [0.55, 0, 0.55] }}
-          transition={{ duration: 1.8, repeat: Infinity, delay: 0.35 }}
-        />
-        <span className="absolute -inset-[3px] rounded-full bg-white opacity-95 blur-[1px]" />
-        <span className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-white bg-white text-[#030712] shadow-[0_0_40px_rgba(255,255,255,0.55)]">
-          <motion.span
-            animate={
-              isOpen
-                ? { rotate: 90 }
-                : { rotate: [0, -15, 15, 0], scale: [1, 1.12, 1] }
-            }
-            transition={
-              isOpen
-                ? { type: "spring", stiffness: 260, damping: 18 }
-                : { duration: 2, repeat: Infinity, ease: "easeInOut" }
-            }
+        <FabPulseRings />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-white bg-white text-[#030712] shadow-[0_4px_20px_rgba(0,0,0,0.35)] sm:h-16 sm:w-16">
+          <m.span
+            animate={isOpen ? { rotate: 90 } : { rotate: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            <Sparkles className="h-7 w-7 text-cyan-600 drop-shadow-sm" />
-          </motion.span>
+            <Sparkles className="h-6 w-6 text-cyan-600 sm:h-7 sm:w-7" />
+          </m.span>
         </span>
-      </motion.button>
-    </motion.div>
+      </m.button>
+    </div>
   );
 }
 

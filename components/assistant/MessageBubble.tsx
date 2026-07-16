@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { ChatMessage } from "@/context/AssistantContext";
 import { useAssistant } from "@/context/AssistantContext";
 
@@ -17,10 +17,10 @@ function MessageBubbleComponent({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.32, ease: "easeOut" }}
+    <m.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
       className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
     >
       <div
@@ -96,7 +96,7 @@ function MessageBubbleComponent({ message }: { message: ChatMessage }) {
           {formatTime(message.timestamp)}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 

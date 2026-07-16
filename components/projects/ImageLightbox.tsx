@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { memo, useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface ImageLightboxProps {
@@ -52,8 +52,8 @@ function ImageLightboxComponent({
   return (
     <AnimatePresence>
       {open ? (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
+        <m.div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/92 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -73,7 +73,7 @@ function ImageLightboxComponent({
               <button
                 type="button"
                 aria-label="Previous"
-                className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/60 p-2 text-cyan-100 hover:bg-cyan-900/80 sm:left-6"
+                className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/80 p-2 text-cyan-100 hover:bg-cyan-900 sm:left-6"
                 onClick={(e) => {
                   e.stopPropagation();
                   prev();
@@ -84,7 +84,7 @@ function ImageLightboxComponent({
               <button
                 type="button"
                 aria-label="Next"
-                className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/60 p-2 text-cyan-100 hover:bg-cyan-900/80 sm:right-6"
+                className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/80 p-2 text-cyan-100 hover:bg-cyan-900 sm:right-6"
                 onClick={(e) => {
                   e.stopPropagation();
                   next();
@@ -95,11 +95,11 @@ function ImageLightboxComponent({
             </>
           ) : null}
 
-          <motion.div
+          <m.div
             key={images[index]}
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
+            exit={{ opacity: 0, scale: 0.97 }}
             className="relative max-h-[88dvh] max-w-[min(920px,94vw)]"
             onClick={(e) => e.stopPropagation()}
           >
@@ -107,13 +107,13 @@ function ImageLightboxComponent({
             <img
               src={images[index]}
               alt={`${alt} — ${index + 1}`}
-              className="max-h-[88dvh] w-auto max-w-full rounded-xl object-contain shadow-[0_0_60px_rgba(34,211,238,0.2)]"
+              className="max-h-[88dvh] w-auto max-w-full rounded-xl object-contain"
             />
             <p className="mt-3 text-center font-mono text-xs text-cyan-200/70">
               {index + 1} / {images.length}
             </p>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       ) : null}
     </AnimatePresence>
   );
