@@ -26,8 +26,10 @@ export const PhoneFrame = memo(function PhoneFrame({
             alt={alt}
             fill
             priority={priority}
+            loading={priority ? undefined : "lazy"}
             className="object-cover object-top"
-            sizes="(max-width: 768px) 45vw, 220px"
+            sizes="(max-width: 768px) 40vw, 220px"
+            quality={70}
           />
         </div>
         <div className="mx-auto mt-1.5 h-1 w-14 rounded-full bg-white/20" />
@@ -68,23 +70,16 @@ export const BrowserFrame = memo(function BrowserFrame({
             alt={alt}
             fill
             priority={priority}
+            loading={priority ? undefined : "lazy"}
             className="object-cover object-top"
             sizes="(max-width: 768px) 100vw, 560px"
+            quality={70}
           />
         </div>
       </div>
     </div>
   );
 });
-
-export function isMobileShot(categories: string[]): boolean {
-  return (
-    categories.includes("mobile") ||
-    categories.includes("ride-sharing") ||
-    categories.includes("ecommerce") ||
-    categories.includes("social")
-  ) && !categories.includes("web") && !categories.includes("pos");
-}
 
 export function MediaStage({ children }: { children: ReactNode }) {
   return <div className="relative">{children}</div>;

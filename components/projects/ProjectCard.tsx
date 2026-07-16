@@ -77,14 +77,14 @@ function ProjectCardComponent({
                     <PhoneFrame
                       src={cover}
                       alt={project.name}
-                      priority={delay < 0.1}
+                      priority={false}
                     />
                   </div>
                 ) : (
                   <BrowserFrame
                     src={cover}
                     alt={project.name}
-                    priority={delay < 0.1}
+                    priority={false}
                     urlLabel={
                       project.liveUrl?.replace(/^https?:\/\//, "") ??
                       `${project.name.toLowerCase().replace(/\s+/g, "")}.app`
@@ -101,9 +101,9 @@ function ProjectCardComponent({
             {images.length > 1 ? (
               <div className="mt-4">
                 <GalleryThumbs
-                  images={images}
+                  images={images.slice(0, 5)}
                   alt={project.name}
-                  active={active}
+                  active={Math.min(active, 4)}
                   onSelect={setActive}
                 />
               </div>

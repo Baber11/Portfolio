@@ -146,7 +146,15 @@ export function GalleryThumbs({
               : "border-white/15 opacity-70 hover:opacity-100"
           }`}
         >
-          <Image src={src} alt={`${alt} thumb ${i + 1}`} fill className="object-cover" sizes="48px" />
+          <Image
+            src={src}
+            alt={`${alt} thumb ${i + 1}`}
+            fill
+            loading="lazy"
+            quality={50}
+            className="object-cover"
+            sizes="48px"
+          />
         </button>
       ))}
     </div>
