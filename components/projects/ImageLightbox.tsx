@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { memo, useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface ImageLightboxProps {
@@ -48,67 +49,73 @@ function ImageLightboxComponent({
     };
   }, [open, onClose, prev, next]);
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/92 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${alt} gallery`}
-    >
-      <button
-        type="button"
-        aria-label="Close gallery"
-        className="absolute right-4 top-4 rounded-full border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20"
-        onClick={onClose}
-      >
-        <X className="h-5 w-5" />
-      </button>
+    <AnimatePresence>
+      {open ? (
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <button
+            type="button"
+            aria-label="Close gallery"
+            className="absolute right-4 top-4 rounded-full border border-white/20 bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </button>
 
-      {images.length > 1 ? (
-        <>
-          <button
-            type="button"
-            aria-label="Previous"
-            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/80 p-2 text-cyan-100 hover:bg-cyan-900 sm:left-6"
-            onClick={(e) => {
-              e.stopPropagation();
-              prev();
-            }}
+          {images.length > 1 ? (
+            <>
+              <button
+                type="button"
+                aria-label="Previous"
+                className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/60 p-2 text-cyan-100 hover:bg-cyan-900/80 sm:left-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prev();
+                }}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/60 p-2 text-cyan-100 hover:bg-cyan-900/80 sm:right-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  next();
+                }}
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </>
+          ) : null}
+
+          <motion.div
+            key={images[index]}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            className="relative max-h-[88dvh] max-w-[min(920px,94vw)]"
+            onClick={(e) => e.stopPropagation()}
           >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next"
-            className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-cyan-400/30 bg-cyan-950/80 p-2 text-cyan-100 hover:bg-cyan-900 sm:right-6"
-            onClick={(e) => {
-              e.stopPropagation();
-              next();
-            }}
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={images[index]}
+              alt={`${alt} — ${index + 1}`}
+              className="max-h-[88dvh] w-auto max-w-full rounded-xl object-contain shadow-[0_0_60px_rgba(34,211,238,0.2)]"
+            />
+            <p className="mt-3 text-center font-mono text-xs text-cyan-200/70">
+              {index + 1} / {images.length}
+            </p>
+          </motion.div>
+        </motion.div>
       ) : null}
-
-      <div
-        className="relative max-h-[88dvh] max-w-[min(920px,94vw)]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={images[index]}
-          alt={`${alt} — ${index + 1}`}
-          className="max-h-[88dvh] w-auto max-w-full rounded-xl object-contain"
-        />
-        <p className="mt-3 text-center font-mono text-xs text-cyan-200/70">
-          {index + 1} / {images.length}
-        </p>
-      </div>
-    </div>
+    </AnimatePresence>
   );
 }
 
@@ -133,9 +140,9 @@ export function GalleryThumbs({
           key={src}
           type="button"
           onClick={() => onSelect(i)}
-          className={`relative h-14 w-10 shrink-0 overflow-hidden rounded-md border sm:h-16 sm:w-12 ${
+          className={`relative h-14 w-10 shrink-0 overflow-hidden rounded-md border transition sm:h-16 sm:w-12 ${
             i === active
-              ? "border-cyan-400"
+              ? "border-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.45)]"
               : "border-white/15 opacity-70 hover:opacity-100"
           }`}
         >

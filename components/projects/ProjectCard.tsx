@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   ExternalLink,
   Images,
@@ -11,7 +12,10 @@ import {
   BrowserFrame,
   PhoneFrame,
 } from "@/components/projects/DeviceFrames";
-import { ImageLightbox } from "@/components/projects/ImageLightbox";
+import {
+  GalleryThumbs,
+  ImageLightbox,
+} from "@/components/projects/ImageLightbox";
 
 function useFrameType(project: Project): "phone" | "browser" {
   return useMemo(() => {
@@ -27,36 +31,39 @@ function useFrameType(project: Project): "phone" | "browser" {
 
 function ProjectCardComponent({
   project,
+  delay = 0,
   featuredLayout = false,
-  priorityCover = false,
 }: {
   project: Project;
   delay?: number;
   featuredLayout?: boolean;
-  /** Only true for the first above-fold card */
-  priorityCover?: boolean;
 }) {
   const images = project.imageUrls ?? [];
+  const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const frame = useFrameType(project);
-  // Cover only — gallery loads inside lightbox when opened
-  const cover = images[0];
+  const cover = images[active] ?? images[0];
 
   return (
     <>
-      <article
-        className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#060d1a]/90 p-[1px] ${
+      <motion.article
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+        className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#060d1a]/75 p-[1px] backdrop-blur-xl ${
           featuredLayout ? "sm:col-span-2" : ""
         }`}
       >
-        <div className="holo-card-border absolute inset-0 rounded-2xl opacity-60 md:opacity-80" />
+        <div className="holo-card-border absolute inset-0 rounded-2xl opacity-80" />
         <div
-          className={`relative grid gap-6 rounded-2xl bg-[#060d1a] p-5 sm:p-6 ${
+          className={`relative grid gap-6 rounded-2xl bg-[#060d1a]/90 p-5 sm:p-6 ${
             featuredLayout
               ? "lg:grid-cols-[1.05fr_0.95fr] lg:items-center"
               : "md:grid-cols-[0.9fr_1.1fr] md:items-center"
           }`}
         >
+          {/* Media */}
           <div className="relative">
             {cover ? (
               <button
@@ -70,14 +77,14 @@ function ProjectCardComponent({
                     <PhoneFrame
                       src={cover}
                       alt={project.name}
-                      priority={priorityCover}
+                      priority={false}
                     />
                   </div>
                 ) : (
                   <BrowserFrame
                     src={cover}
                     alt={project.name}
-                    priority={priorityCover}
+                    priority={false}
                     urlLabel={
                       project.liveUrl?.replace(/^https?:\/\//, "") ??
                       `${project.name.toLowerCase().replace(/\s+/g, "")}.app`
@@ -90,8 +97,20 @@ function ProjectCardComponent({
                 <Sparkles className="h-8 w-8 text-cyan-500/40" />
               </div>
             )}
+
+            {images.length > 1 ? (
+              <div className="mt-4">
+                <GalleryThumbs
+                  images={images.slice(0, 5)}
+                  alt={project.name}
+                  active={Math.min(active, 4)}
+                  onSelect={setActive}
+                />
+              </div>
+            ) : null}
           </div>
 
+          {/* Copy */}
           <div className="relative z-10 flex min-h-0 flex-col">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               {project.featured ? (
@@ -185,12 +204,12 @@ function ProjectCardComponent({
             </div>
           </div>
         </div>
-      </article>
+      </motion.article>
 
-      {images.length > 0 && lightbox ? (
+      {images.length > 0 ? (
         <ImageLightbox
           images={images}
-          startIndex={0}
+          startIndex={active}
           alt={project.name}
           open={lightbox}
           onClose={() => setLightbox(false)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { motion } from "framer-motion";
 import type { ChatMessage } from "@/context/AssistantContext";
 import { useAssistant } from "@/context/AssistantContext";
 
@@ -16,18 +17,23 @@ function MessageBubbleComponent({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
 
   return (
-    <div className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.32, ease: "easeOut" }}
+      className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
+    >
       <div
         className={`max-w-[92%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed sm:max-w-[85%] ${
           isUser
-            ? "rounded-br-md bg-gradient-to-br from-cyan-500 to-teal-600 text-white"
-            : "rounded-bl-md border border-cyan-400/20 bg-white/[0.04] text-slate-100"
+            ? "rounded-br-md bg-gradient-to-br from-cyan-500 to-teal-600 text-white shadow-[0_0_20px_rgba(34,211,238,0.25)]"
+            : "rounded-bl-md border border-cyan-400/20 bg-white/[0.04] text-slate-100 shadow-[inset_0_0_20px_rgba(34,211,238,0.06)] backdrop-blur-md"
         }`}
       >
         <p className="whitespace-pre-wrap">
           {message.content}
           {message.isStreaming ? (
-            <span className="ml-0.5 inline-block h-3.5 w-0.5 bg-cyan-300 align-middle" />
+            <span className="ml-0.5 inline-block h-3.5 w-0.5 animate-pulse bg-cyan-300 align-middle shadow-[0_0_6px_#22d3ee]" />
           ) : null}
         </p>
 
@@ -74,7 +80,7 @@ function MessageBubbleComponent({ message }: { message: ChatMessage }) {
                 key={`${action.type}-${action.label}`}
                 type="button"
                 onClick={() => runAction(action)}
-                className="btn-holo rounded-lg border border-cyan-400/35 bg-cyan-400/10 px-2.5 py-1 font-mono text-[11px] font-medium text-cyan-100 hover:border-cyan-300/60 hover:bg-cyan-400/20"
+                className="btn-holo rounded-lg border border-cyan-400/35 bg-cyan-400/10 px-2.5 py-1 font-mono text-[11px] font-medium text-cyan-100 transition hover:border-cyan-300/60 hover:bg-cyan-400/20 hover:shadow-[0_0_12px_rgba(34,211,238,0.3)]"
               >
                 {action.label}
               </button>
@@ -90,7 +96,7 @@ function MessageBubbleComponent({ message }: { message: ChatMessage }) {
           {formatTime(message.timestamp)}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
