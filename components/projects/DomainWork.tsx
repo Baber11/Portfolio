@@ -172,7 +172,8 @@ function useStageProgress(stageRef: RefObject<HTMLDivElement | null>) {
       const el = stageRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const scrollable = el.offsetHeight - window.innerHeight;
+      const viewportH = window.visualViewport?.height ?? window.innerHeight;
+      const scrollable = el.offsetHeight - viewportH;
       if (scrollable <= 1) {
         progress.set(0);
         return;
@@ -184,13 +185,152 @@ function useStageProgress(stageRef: RefObject<HTMLDivElement | null>) {
     update();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("scroll", update);
     return () => {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("scroll", update);
     };
   }, [stageRef, progress]);
 
   return progress;
+}
+
+/** Mobile-only WORK scrubber — sticky title + phone appear/disappear. */
+function MobileWorkStage({
+  phones,
+  reduced,
+  onOpen,
+  onActiveChange,
+  onViewDetails,
+}: {
+  phones: Project[];
+  reduced: boolean;
+  onOpen: (project: Project) => void;
+  onActiveChange: (index: number) => void;
+  onViewDetails: () => void;
+}) {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const progress = useStageProgress(stageRef);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setReady(true);
+  }, []);
+
+  useMotionValueEvent(progress, "change", (v) => {
+    if (phones.length <= 0) return;
+    // Slight bias so the next card engages a bit earlier while scrolling down.
+    const next = Math.min(
+      phones.length - 1,
+      Math.max(0, Math.floor(v * phones.length + 0.05)),
+    );
+    setActiveIndex((prev) => (prev === next ? prev : next));
+  });
+
+  useEffect(() => {
+    onActiveChange(activeIndex);
+  }, [activeIndex, onActiveChange]);
+
+  const activePhone = phones[activeIndex] ?? null;
+  const stageVh = Math.max(phones.length * 70, 200);
+
+  const titleScale = useTransform(
+    progress,
+    [0, 0.35, 0.7, 1],
+    reduced ? [1, 1, 1, 1] : [0.92, 1.14, 1.06, 0.86],
+  );
+  const titleOpacity = useTransform(
+    progress,
+    [0, 0.15, 0.85, 1],
+    reduced ? [1, 1, 1, 1] : [0.85, 1, 0.95, 0.55],
+  );
+
+  return (
+    <div
+      ref={stageRef}
+      className="work-full-bleed relative mt-2"
+      style={{ height: `${stageVh}vh` }}
+    >
+      <div className="sticky top-0 flex h-[100dvh] flex-col items-center overflow-hidden px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-8">
+        <m.h2
+          style={{ scale: titleScale, opacity: titleOpacity }}
+          className="work-giant-title work-giant-title--mobile pointer-events-none absolute left-1/2 top-[12%] z-0 -translate-x-1/2 select-none font-display font-black uppercase leading-none text-white"
+          aria-label="Work"
+        >
+          Work
+        </m.h2>
+
+        <div className="relative z-20 flex min-h-0 w-full flex-1 flex-col items-center justify-center">
+          <AnimatePresence mode="wait" initial={false}>
+            {activePhone?.imageUrls?.[0] ? (
+              <m.button
+                key={activePhone.id}
+                type="button"
+                onClick={() => onOpen(activePhone)}
+                initial={
+                  !ready || reduced
+                    ? false
+                    : { opacity: 0, y: 36, scale: 0.92 }
+                }
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={
+                  reduced
+                    ? undefined
+                    : { opacity: 0, y: -28, scale: 0.94 }
+                }
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto block"
+                aria-label={`Open ${activePhone.name}`}
+              >
+                <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-200/90">
+                  {activePhone.name}
+                </p>
+                <PhoneFrame
+                  src={activePhone.imageUrls[0]}
+                  alt={activePhone.name}
+                  priority
+                  size="lg"
+                  className="work-phone-mobile"
+                />
+              </m.button>
+            ) : null}
+          </AnimatePresence>
+        </div>
+
+        <div className="relative z-30 flex w-full flex-col items-center gap-3 pb-2">
+          <div className="flex gap-1.5">
+            {phones.map((p, i) => (
+              <span
+                key={p.id}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  i === activeIndex ? "w-5 bg-cyan-300" : "w-1.5 bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
+          <p className="font-mono text-[10px] tracking-wider text-slate-500">
+            {activeIndex + 1} / {phones.length} · scroll to change
+          </p>
+          <button
+            type="button"
+            onClick={onViewDetails}
+            className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-slate-200"
+          >
+            <span
+              className="h-px w-8 bg-gradient-to-r from-cyan-300 to-transparent"
+              aria-hidden
+            />
+            View details
+            <ArrowUpRight className="h-3.5 w-3.5 text-cyan-300" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ScrollPhone({
@@ -343,7 +483,6 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
 
   const phones = useMemo(
     () =>
@@ -361,9 +500,11 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
 
   const progress = useStageProgress(stageRef);
 
-  useEffect(() => setMounted(true), []);
-
   useMotionValueEvent(progress, "change", (v) => {
+    // Desktop stage only — mobile updates via MobileWorkStage.
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      return;
+    }
     if (phones.length <= 0) return;
     const next = Math.min(
       phones.length - 1,
@@ -371,6 +512,10 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
     );
     setActiveIndex((prev) => (prev === next ? prev : next));
   });
+
+  const onMobileActiveChange = useCallback((index: number) => {
+    setActiveIndex(index);
+  }, []);
 
   const activePhone = phones[activeIndex] ?? null;
 
@@ -399,8 +544,6 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
 
   return (
     <section id="projects" className="scroll-mt-24 w-full min-w-0 py-10 sm:py-14">
-     
-
       <div className="work-full-bleed relative z-20 rotate-[-1.2deg]">
         <MarqueeBand items={MARQUEE_TOP} tone="light" />
         <div className="-mt-0.5 rotate-[2.4deg]">
@@ -408,7 +551,7 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
         </div>
       </div>
 
-      <div className="mb-8 max-w-2xl mt-20 text-center mx-auto">
+      <div className="mx-auto mb-8 mt-12 max-w-2xl text-center md:mt-20">
         <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-300/90">
           Mobile products
         </p>
@@ -421,20 +564,27 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
         </p>
       </div>
 
+      {/* Mobile-only WORK scrubber */}
+      <div className="md:hidden">
+        <MobileWorkStage
+          phones={phones}
+          reduced={reduced}
+          onOpen={openProject}
+          onActiveChange={onMobileActiveChange}
+          onViewDetails={openDetails}
+        />
+      </div>
+
+      {/* Desktop WORK stage — unchanged */}
       <div
         ref={stageRef}
-        className="work-full-bleed relative mt-4"
+        className="work-full-bleed relative mt-4 hidden md:block"
         style={{ height: `${stageVh}vh` }}
       >
         <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center overflow-hidden">
-          {/* <p className="pointer-events-none absolute left-5 top-7 z-40 font-mono text-[10px] uppercase tracking-[0.32em] text-slate-500 sm:left-8">
-            Selected work
-          </p> */}
-
           <WorkTitle progress={progress} reduced={reduced} />
 
-          {/* Desktop: scroll-scrubbed phones */}
-          <div className="pointer-events-none absolute inset-0 z-30 hidden md:block">
+          <div className="pointer-events-none absolute inset-0 z-30">
             <div className="pointer-events-auto relative h-full w-full">
               {phones.map((project, i) => (
                 <ScrollPhone
@@ -450,48 +600,10 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
             </div>
           </div>
 
-          {/* Mobile: appear / disappear swap */}
-          <div className="relative z-30 mt-6 md:hidden">
-            <AnimatePresence mode="wait">
-              {activePhone?.imageUrls?.[0] ? (
-                <m.button
-                  key={activePhone.id}
-                  type="button"
-                  onClick={() => openProject(activePhone)}
-                  initial={
-                    !mounted || reduced
-                      ? false
-                      : { opacity: 0, y: 40, scale: 0.9 }
-                  }
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={
-                    reduced ? undefined : { opacity: 0, y: -40, scale: 0.9 }
-                  }
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                  className="mx-auto block"
-                  aria-label={`Open ${activePhone.name}`}
-                >
-                  <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-200/90">
-                    {activePhone.name}
-                  </p>
-                  <PhoneFrame
-                    src={activePhone.imageUrls[0]}
-                    alt={activePhone.name}
-                    priority
-                    size="lg"
-                  />
-                </m.button>
-              ) : null}
-            </AnimatePresence>
-            <p className="mt-5 text-center font-mono text-[10px] tracking-wider text-slate-500">
-              {activeIndex + 1} / {phones.length} · scroll to change
-            </p>
-          </div>
-
           <button
             type="button"
             onClick={openDetails}
-            className="relative z-40 mt-8 inline-flex items-center gap-3 self-center font-mono text-[11px] uppercase tracking-[0.28em] text-slate-200 transition hover:text-cyan-200 md:absolute md:bottom-[9%] md:mt-0"
+            className="absolute bottom-[9%] z-40 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-slate-200 transition hover:text-cyan-200"
           >
             <span
               className="h-px w-10 bg-gradient-to-r from-cyan-300 to-transparent sm:w-14"
@@ -501,7 +613,7 @@ function DomainWorkComponent({ projects }: { projects: Project[] }) {
             <ArrowUpRight className="h-3.5 w-3.5 text-cyan-300" />
           </button>
 
-          <div className="pointer-events-none absolute bottom-8 left-1/2 z-40 hidden -translate-x-1/2 gap-1.5 md:flex">
+          <div className="pointer-events-none absolute bottom-8 left-1/2 z-40 flex -translate-x-1/2 gap-1.5">
             {phones.map((p, i) => (
               <span
                 key={p.id}

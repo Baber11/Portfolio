@@ -278,8 +278,17 @@ body {
 
 @media (max-width: 767px) {
   .work-phone-lg {
-    width: min(210px, 48vw);
-    max-width: min(210px, 48vw);
+    width: min(200px, 46vw);
+    max-width: min(200px, 46vw);
+  }
+
+  .work-phone-mobile {
+    width: min(200px, 46vw) !important;
+    max-width: min(200px, 46vw) !important;
+  }
+
+  .work-giant-title--mobile {
+    font-size: clamp(3.25rem, 20vw, 5.25rem);
   }
 }
 
