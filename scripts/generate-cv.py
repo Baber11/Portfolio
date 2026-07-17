@@ -185,13 +185,16 @@ def main():
     story.append(Paragraph("Senior Mobile Application Developer  |  Team Lead", styles["title"]))
     story.append(
         Paragraph(
-            "React Native  ·  Next.js  ·  Angular  ·  AI Systems  ·  5+ Years",
+            "React Native  ·  Next.js  ·  Angular  ·  AI Systems  ·  6+ Years",
             styles["tagline"],
         )
     )
     story.append(
         Paragraph(
             "Karachi, Pakistan  ·  +92 329 2297354  ·  syedbaber115@gmail.com<br/>"
+            "Portfolio: "
+            '<link href="https://portfolio-eight-wine-57.vercel.app/">'
+            "portfolio-eight-wine-57.vercel.app</link><br/>"
             "linkedin.com/in/syed-baber-ali-106831222  ·  github.com/Baber11",
             styles["contact"],
         )
@@ -201,7 +204,7 @@ def main():
     story += section("Professional Summary", styles)
     story.append(
         Paragraph(
-            "Results-driven Senior Mobile Application Developer and Team Lead with 5+ years of "
+            "Results-driven Senior Mobile Application Developer and Team Lead with 6+ years of "
             "experience delivering production-grade cross-platform mobile applications using "
             "<b>React Native</b>, modern web platforms with <b>Next.js</b>, and enterprise "
             "<b>Angular</b> systems. Proven track record across healthcare, logistics, fintech, "

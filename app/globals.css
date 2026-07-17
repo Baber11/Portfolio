@@ -223,3 +223,164 @@ body {
 .btn-holo:hover::before {
   transform: translateX(120%);
 }
+
+.domain-work-panel {
+  animation: domain-panel-in 0.35s ease-out;
+}
+
+@keyframes domain-panel-in {
+  from {
+    opacity: 0.45;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Full-bleed breakout from max-w page column */
+.work-full-bleed {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.work-giant-title {
+  font-size: clamp(3.5rem, 12vw, 9.5rem);
+  text-shadow: 0 0 60px rgba(34, 211, 238, 0.1);
+  mix-blend-mode: difference;
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+.work-scroll-phone {
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+/**
+ * Showcase phones sized to ~45% of viewport height max,
+ * so two can sit beside WORK without filling the screen.
+ */
+.work-phone-lg {
+  width: min(220px, 20vh);
+  max-width: min(220px, 20vh);
+}
+
+@media (min-width: 1024px) {
+  .work-phone-lg {
+    width: min(250px, 22vh);
+    max-width: min(250px, 22vh);
+  }
+}
+
+@media (max-width: 767px) {
+  .work-phone-lg {
+    width: min(210px, 48vw);
+    max-width: min(210px, 48vw);
+  }
+}
+
+.work-marquee-track {
+  animation: work-marquee-left 28s linear infinite;
+}
+
+.work-marquee-reverse {
+  animation-name: work-marquee-right;
+  animation-duration: 32s;
+}
+
+@keyframes work-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes work-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Horizontal app chip scroller */
+.app-chip-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 211, 238, 0.45) transparent;
+}
+
+.app-chip-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.app-chip-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.4);
+}
+
+.app-chip-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .domain-work-panel {
+    animation: none;
+  }
+
+  .work-marquee-track,
+  .work-marquee-reverse {
+    animation: none;
+  }
+
+  .work-giant-title {
+    mix-blend-mode: normal;
+  }
+
+  .quick-dock-orb {
+    animation: none !important;
+  }
+}
+
+/* 3D floating sticky contact orbs */
+.quick-dock-orb {
+  transform: translateZ(0);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    0 2px 0 rgba(255, 255, 255, 0.28) inset,
+    0 -3px 8px rgba(0, 0, 0, 0.35) inset;
+  animation: quick-dock-float 3.4s ease-in-out infinite;
+  animation-delay: var(--dock-delay, 0s);
+  will-change: transform;
+}
+
+.quick-dock-orb:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.5),
+    0 0 22px var(--dock-glow, rgba(34, 211, 238, 0.45)),
+    0 2px 0 rgba(255, 255, 255, 0.35) inset,
+    0 -3px 8px rgba(0, 0, 0, 0.3) inset;
+  animation-play-state: paused;
+}
+
+.quick-dock-orb:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@keyframes quick-dock-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}

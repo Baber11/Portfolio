@@ -249,12 +249,12 @@ export const knowledge: KnowledgeBase = {
       technologies: ["React Native", "Firebase", "REST APIs"],
       featured: true,
       imageUrls: [
-        "/assets/screenshots/Qbid/01.webp",
         "/assets/screenshots/Qbid/02.webp",
+        "/assets/screenshots/Qbid/06.webp",
+        "/assets/screenshots/Qbid/05.webp",
         "/assets/screenshots/Qbid/03.webp",
         "/assets/screenshots/Qbid/04.webp",
-        "/assets/screenshots/Qbid/05.webp",
-        "/assets/screenshots/Qbid/06.webp",
+        "/assets/screenshots/Qbid/01.webp",
       ],
       highlights: [
         "Service request creation & offer browsing",
@@ -330,12 +330,59 @@ export const knowledge: KnowledgeBase = {
     {
       id: "proj-hatchsocial",
       name: "HatchSocial",
-      summary: "Social network with chat and live streaming features.",
+      summary:
+        "Interest-based social network with communities, chat, and live audio/video.",
       description:
-        "A social networking platform featuring chat and live streaming capabilities.",
+        "HatchSocial is a social networking app built around interest-driven communities (Nests), content feeds, and real-time communication. Users complete profile and interest onboarding, join communities, post and filter content, chat in-app, and connect through audio and video calls. The product also includes membership and subscription flows for paid access.",
       categories: ["mobile", "social"],
-      technologies: ["React Native", "Agora", "CometChat", "Firebase"],
-      highlights: ["Chat", "Live streaming"],
+      technologies: [
+        "React Native",
+        "Agora",
+        "Redux",
+        "Firebase",
+        "Stripe",
+        "NativeBase",
+      ],
+      imageUrls: [
+        "/assets/screenshots/hatchsocial/01.webp",
+        "/assets/screenshots/hatchsocial/02.webp",
+        "/assets/screenshots/hatchsocial/04.webp",
+        "/assets/screenshots/hatchsocial/05.webp",
+        "/assets/screenshots/hatchsocial/06.webp",
+        "/assets/screenshots/hatchsocial/07.webp",
+        "/assets/screenshots/hatchsocial/11.webp",
+        "/assets/screenshots/hatchsocial/21.webp",
+      ],
+      highlights: [
+        "Interest & Nest onboarding",
+        "Community feeds and posting",
+        "In-app chat with audio/video calls",
+        "Membership and Stripe subscriptions",
+      ],
+    },
+    {
+      id: "proj-meno-crysis",
+      name: "Meno-Crysis",
+      summary: "Health tracking and diet app for everyday wellness management.",
+      description:
+        "Meno-Crysis is a health tracking and diet application that helps users monitor wellness routines, nutrition, and lifestyle habits from their phone. It brings health logging, diet guidance, and progress tracking into a focused mobile experience for day-to-day care and healthier routines.",
+      categories: ["mobile", "healthcare"],
+      technologies: ["React Native", "Firebase", "REST APIs", "TypeScript"],
+      imageUrls: [
+        "/assets/screenshots/meno-crysis/01.webp",
+        "/assets/screenshots/meno-crysis/02.webp",
+        "/assets/screenshots/meno-crysis/03.webp",
+        "/assets/screenshots/meno-crysis/04.webp",
+        "/assets/screenshots/meno-crysis/05.webp",
+        "/assets/screenshots/meno-crysis/06.webp",
+        "/assets/screenshots/meno-crysis/07.webp",
+        "/assets/screenshots/meno-crysis/08.webp",
+      ],
+      highlights: [
+        "Health & wellness tracking",
+        "Diet and nutrition guidance",
+        "Progress and habit monitoring",
+      ],
     },
     {
       id: "proj-indoor",
@@ -669,6 +716,7 @@ export const knowledge: KnowledgeBase = {
   social: {
     github: "https://github.com/Baber11",
     linkedin: "https://www.linkedin.com/in/syed-baber-ali-106831222",
+    portfolio: "https://portfolio-eight-wine-57.vercel.app/",
   },
 
   faqs: [
@@ -834,6 +882,7 @@ function buildEntries(kb: KnowledgeBase): KnowledgeEntry[] {
       "proj-disc-music",
       "proj-load-navigator",
       "proj-hatchsocial",
+      "proj-meno-crysis",
       "proj-ai-surveillance",
     ],
     priority: 12,
@@ -958,18 +1007,22 @@ function buildEntries(kb: KnowledgeBase): KnowledgeEntry[] {
     category: "industries",
     title: "Healthcare Experience",
     content:
-      "Baber has built multilingual healthcare and hospital management software, including Daweeye — a platform designed for clinical workflows and hospital operations.",
+      "Baber has built healthcare products spanning hospital operations and consumer wellness — including Daweeye, a multilingual hospital management platform for clinical workflows, and Meno-Crysis, a health tracking and diet application for everyday wellness and nutrition.",
     keywords: [
       "healthcare",
       "health",
       "hospital",
       "medical",
       "daweeye",
+      "meno-crysis",
+      "menocrysis",
+      "diet",
+      "wellness",
       "clinical",
     ],
-    aliases: ["healthcare projects", "show healthcare", "hospital"],
+    aliases: ["healthcare projects", "show healthcare", "hospital", "diet app"],
     technologies: ["React Native", "Firebase", "REST APIs", "TypeScript"],
-    projectIds: ["proj-daweeye"],
+    projectIds: ["proj-daweeye", "proj-meno-crysis"],
     priority: 11,
     actions: [
       {
@@ -1092,7 +1145,7 @@ function buildEntries(kb: KnowledgeBase): KnowledgeEntry[] {
     category: "projects",
     title: "Mobile Applications",
     content:
-      "Baber specializes in mobile applications. Published and delivered work includes RideLynk (user & rider), LookClean (App Store & Play Store), Facilitate (App Store & Play Store), MBN App, QBid, YouAreHere, Disc Music, LoadNavigator, Daweeye, HatchSocial, EndorseMe, and an indoor positioning app for Dubai malls — plus AI surveillance deployed at California and Broadway.",
+      "Baber specializes in mobile applications. Published and delivered work includes RideLynk (user & rider), LookClean (App Store & Play Store), Facilitate (App Store & Play Store), MBN App, QBid, YouAreHere, Disc Music, LoadNavigator, Daweeye, Meno-Crysis, HatchSocial, EndorseMe, and an indoor positioning app for Dubai malls — plus AI surveillance deployed at California and Broadway.",
     keywords: [
       "mobile",
       "apps",
@@ -1116,6 +1169,7 @@ function buildEntries(kb: KnowledgeBase): KnowledgeEntry[] {
       "proj-disc-music",
       "proj-load-navigator",
       "proj-daweeye",
+      "proj-meno-crysis",
       "proj-hatchsocial",
     ],
     priority: 11,

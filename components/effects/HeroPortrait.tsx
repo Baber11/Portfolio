@@ -135,3 +135,4 @@ function HeroPortraitComponent() {
 }
 
 export const HeroPortrait = memo(HeroPortraitComponent);
+

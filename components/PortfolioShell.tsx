@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { knowledge } from "@/data/knowledge";
+import { domainsWithWork } from "@/data/domains";
 import { GalaxyBackground } from "@/components/effects/GalaxyBackground";
 import { HeroPortrait } from "@/components/effects/HeroPortrait";
 import { HoloCard } from "@/components/effects/HoloCard";
 import { PortraitVideoFrame } from "@/components/effects/PortraitVideoFrame";
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import { DomainWork } from "@/components/projects/DomainWork";
+import { QuickContactDock } from "@/components/QuickContactDock";
 import { LazyMount } from "@/components/LazyMount";
 import { riseIn, riseInX } from "@/lib/motion";
 import { m } from "framer-motion";
@@ -21,8 +23,6 @@ import {
   Orbit,
   ArrowDown,
 } from "lucide-react";
-
-const FEATURED_INITIAL = 3;
 
 function scrollToSection(e: MouseEvent<HTMLAnchorElement>, href: string) {
   if (!href.startsWith("#")) return;
@@ -44,16 +44,17 @@ function SectionHeading({
   subtitle?: string;
 }) {
   return (
-    <m.div className="mb-10 max-w-2xl" {...riseInX}>
-      <p className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-300/90">
-        <span className="inline-block h-px w-8 bg-gradient-to-r from-cyan-400 to-transparent" />
+    <m.div className="mx-auto mb-10 max-w-2xl text-center" {...riseInX}>
+      <p className="mb-2 flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-300/90">
+        <span className="inline-block h-px w-8 bg-gradient-to-r from-transparent to-cyan-400" />
         {eyebrow}
+        <span className="inline-block h-px w-8 bg-gradient-to-l from-transparent to-cyan-400" />
       </p>
       <h2 className="font-display text-2xl font-semibold tracking-wide text-slate-50 sm:text-3xl md:text-4xl">
-        <span className="holo-text holo-glitch">{title}</span>
+        <span className="holo-text">{title}</span>
       </h2>
       {subtitle ? (
-        <p className="mt-3 text-sm leading-relaxed text-slate-400 sm:text-base">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base">
           {subtitle}
         </p>
       ) : null}
@@ -62,52 +63,24 @@ function SectionHeading({
 }
 
 export function PortfolioShell() {
-  const [showAllFeatured, setShowAllFeatured] = useState(false);
   const { about, projects, contact, social, resume, experience, skills } =
     knowledge;
 
-  const withImages = projects.filter((p) => (p.imageUrls?.length ?? 0) > 0);
-  const featured = withImages.filter((p) => p.featured);
-  const featuredVisible = showAllFeatured
-    ? featured
-    : featured.slice(0, FEATURED_INITIAL);
-  const featuredIds = new Set(featured.map((p) => p.id));
-  const mobile = projects.filter(
-    (p) =>
-      (p.imageUrls?.length ?? 0) > 0 &&
-      !featuredIds.has(p.id) &&
-      (p.categories.includes("mobile") ||
-        p.categories.includes("ride-sharing") ||
-        (p.categories.includes("ecommerce") && !p.categories.includes("web")) ||
-        (p.categories.includes("social") && !p.categories.includes("web"))),
-  );
-  const web = projects.filter(
-    (p) =>
-      (p.imageUrls?.length ?? 0) > 0 &&
-      !featuredIds.has(p.id) &&
-      (p.categories.includes("web") || p.categories.includes("pos")),
-  );
+  const domainCount = domainsWithWork(projects).length;
+  const visualCount = projects.filter(
+    (p) => (p.imageUrls?.length ?? 0) > 0,
+  ).length;
   const ai = projects.filter((p) => p.categories.includes("ai"));
-  const healthcare = projects.filter((p) =>
-    p.categories.includes("healthcare"),
-  );
-  const logistics = projects.filter(
-    (p) =>
-      (p.imageUrls?.length ?? 0) > 0 &&
-      p.categories.includes("logistics") &&
-      !featuredIds.has(p.id),
-  );
 
   const navLinks = [
-    ["#projects", "Work"],
-    ["#mobile", "Mobile"],
-    ["#web", "Web"],
     ["#ai", "AI"],
+    ["#projects", "Work"],
+    ["#experience", "Experience"],
     ["#contact", "Contact"],
   ] as const;
 
   return (
-    <div className="relative min-h-full overflow-x-hidden text-slate-100">
+    <div className="relative min-h-full w-full min-w-0 overflow-x-clip text-slate-100">
       <GalaxyBackground />
 
       <header className="relative z-20 mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
@@ -117,7 +90,7 @@ export function PortfolioShell() {
             BABER<span className="text-cyan-400">.DEV</span>
           </p>
         </div>
-        <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-slate-300 backdrop-blur-xl md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-slate-300 md:flex">
           {navLinks.map(([href, label]) => (
             <a
               key={href}
@@ -138,12 +111,11 @@ export function PortfolioShell() {
         </nav>
       </header>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-5 pb-32 sm:px-8">
-        {/* Hero */}
-        <section className="relative grid min-h-[min(88vh,860px)] items-center gap-10 pb-20 pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 sm:pt-14">
+      <main className="relative z-10 mx-auto w-full min-w-0 max-w-6xl px-5 pb-32 sm:px-8">
+        <section className="relative grid min-h-[min(88vh,860px)] items-center gap-10 pb-16 pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 sm:pt-14">
           <div className="relative max-w-3xl">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-200">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300" />
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />
               {about.tagline}
             </p>
 
@@ -165,46 +137,45 @@ export function PortfolioShell() {
                 onClick={(e) => scrollToSection(e, "#projects")}
                 className="btn-holo inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_0_30px_rgba(34,211,238,0.35)]"
               >
-                View case work <ArrowDown className="h-4 w-4" />
+                Browse work <ArrowDown className="h-4 w-4" />
               </a>
               <a
                 href="#contact"
                 onClick={(e) => scrollToSection(e, "#contact")}
-                className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm text-slate-200 backdrop-blur-md transition hover:border-cyan-300/40 hover:bg-cyan-400/10"
+                className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm text-slate-200 transition hover:border-cyan-300/40 hover:bg-cyan-400/10"
               >
                 Hire Baber
               </a>
               <button
                 type="button"
                 onClick={() =>
-                  document
-                    .querySelector<HTMLButtonElement>(
-                      '[aria-label="Open portfolio assistant"]',
-                    )
-                    ?.click()
+                  (
+                    document.querySelector(
+                      'button[aria-label*="Portfolio Assistant"]',
+                    ) as HTMLButtonElement | null
+                  )?.click()
                 }
                 className="inline-flex items-center gap-2 rounded-full border border-teal-400/40 bg-teal-400/10 px-6 py-3 text-sm text-teal-100 transition hover:bg-teal-400/20"
               >
-                <Sparkles className="h-4 w-4" /> Chat with Baber's AI assistant
+                <Sparkles className="h-4 w-4" /> Ask Baber's AI
               </button>
             </div>
           </div>
 
-          {/* Animated personal portrait */}
           <div className="relative flex justify-center lg:justify-end">
             <HeroPortrait />
           </div>
         </section>
 
         <m.div
-          className="mb-4 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
+          className="mb-2 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
           {...riseIn}
         >
           {[
             ["6+", "Years"],
-            ["20+", "Products"],
-            ["2", "Stores"],
-            ["AI", "Live Deploys"],
+            [String(domainCount), "Industries"],
+            [String(visualCount), "Products"],
+            ["AI", "Live"],
           ].map(([value, label]) => (
             <div
               key={label}
@@ -220,81 +191,11 @@ export function PortfolioShell() {
           ))}
         </m.div>
 
-        {/* Featured */}
-        <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
-          <SectionHeading
-            eyebrow="Selected case work"
-            title="Featured Projects"
-            subtitle="Real product screens — mobile apps, logistics platforms, POS, and AI systems shipped to production."
-          />
-          <div className="grid gap-8">
-            {featuredVisible.map((p, i) => (
-              <ProjectCard
-                key={p.id}
-                project={p}
-                delay={Math.min(i, 2) * 0.05}
-                featuredLayout
-                priorityCover={i === 0}
-              />
-            ))}
-          </div>
-          {!showAllFeatured && featured.length > FEATURED_INITIAL ? (
-            <button
-              type="button"
-              onClick={() => setShowAllFeatured(true)}
-              className="mt-8 w-full rounded-full border border-cyan-400/35 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-400/20 sm:w-auto"
-            >
-              Show {featured.length - FEATURED_INITIAL} more projects
-            </button>
-          ) : null}
-        </section>
-
-        <section id="mobile" className="scroll-mt-24 py-14 sm:py-20">
-          <SectionHeading
-            eyebrow="Mobile constellation"
-            title="Mobile Applications"
-            subtitle="React Native products with App Store & Play Store releases — presented in device frames."
-          />
-          <LazyMount minHeight={360} rootMargin="200px 0px">
-            <div className="grid gap-8">
-              {mobile.map((p, i) => (
-                <ProjectCard key={p.id} project={p} delay={Math.min(i, 2) * 0.04} />
-              ))}
-              {mobile.length === 0 ? (
-                <p className="font-mono text-sm text-slate-500">
-                  Additional mobile case studies appear in Featured above.
-                </p>
-              ) : null}
-            </div>
-          </LazyMount>
-        </section>
-
-        <section id="web" className="scroll-mt-24 py-14 sm:py-20">
-          <SectionHeading
-            eyebrow="Web protocols"
-            title="Web & POS Systems"
-            subtitle="Next.js logistics platforms and POS — browser-framed production UI."
-          />
-          <LazyMount minHeight={360} rootMargin="200px 0px">
-            <div className="grid gap-8">
-              {web.map((p, i) => (
-                <ProjectCard key={p.id} project={p} delay={Math.min(i, 2) * 0.04} />
-              ))}
-              {web.length === 0 ? (
-                <p className="font-mono text-sm text-slate-500">
-                  Primary web & POS work is showcased in Featured above — including
-                  FleetEx, Rapid Express, and Order Intel POS.
-                </p>
-              ) : null}
-            </div>
-          </LazyMount>
-        </section>
-
         <section id="ai" className="scroll-mt-24 py-14 sm:py-20">
           <SectionHeading
             eyebrow="Neural uplink"
             title="AI Surveillance"
-            subtitle="Currently implemented at California and Broadway — portrait field demo."
+            subtitle="Currently implemented at California and Broadway — portrait field demo"
           />
           <LazyMount minHeight={420} rootMargin="180px 0px">
             <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto_1fr]">
@@ -341,45 +242,13 @@ export function PortfolioShell() {
           </LazyMount>
         </section>
 
-        <section id="healthcare" className="scroll-mt-24 py-14 sm:py-20">
-          <SectionHeading
-            eyebrow="Sector // Healthcare"
-            title="Healthcare Systems"
-          />
-          <LazyMount minHeight={240} rootMargin="200px 0px">
-            <div className="grid gap-5 sm:grid-cols-2">
-              {healthcare.map((p, i) => (
-                <HoloCard key={p.id} delay={Math.min(i, 2) * 0.05}>
-                  <h3 className="font-display text-base text-slate-50">
-                    {p.name}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-400">{p.summary}</p>
-                </HoloCard>
-              ))}
-            </div>
-          </LazyMount>
-        </section>
+        <DomainWork projects={projects} />
 
-        <section id="logistics" className="scroll-mt-24 py-14 sm:py-20">
-          <SectionHeading
-            eyebrow="Sector // Logistics"
-            title="Logistics Networks"
-            subtitle="Freight platforms, portals, and LoadNavigator for carriers & drivers."
-          />
-          <LazyMount minHeight={320} rootMargin="200px 0px">
-            <div className="grid gap-8">
-              {logistics.map((p, i) => (
-                <ProjectCard key={p.id} project={p} delay={Math.min(i, 2) * 0.04} />
-              ))}
-              {logistics.length === 0 ? (
-                <p className="font-mono text-sm text-slate-500">
-                  Logistics platforms are featured above — LoadNavigator, FleetEx,
-                  and Rapid Express.
-                </p>
-              ) : null}
-            </div>
-          </LazyMount>
-        </section>
+        {/* Anchors kept for assistant deep-links */}
+        <div id="mobile" className="sr-only" aria-hidden />
+        <div id="web" className="sr-only" aria-hidden />
+        <div id="healthcare" className="sr-only" aria-hidden />
+        <div id="logistics" className="sr-only" aria-hidden />
 
         <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
           <SectionHeading eyebrow="Timeline" title="Experience" />
@@ -412,7 +281,7 @@ export function PortfolioShell() {
                 {[...skills.primary, ...skills.secondary].map((s) => (
                   <span
                     key={s}
-                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-slate-300 transition hover:border-cyan-400/40 hover:text-cyan-100"
+                    className="rounded border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-slate-300 transition hover:border-cyan-400/40 hover:text-cyan-100"
                   >
                     {s}
                   </span>
@@ -446,7 +315,7 @@ export function PortfolioShell() {
               href={`tel:${contact.phone.replace(/\s/g, "")}`}
               className="block"
             >
-              <HoloCard delay={0.05}>
+              <HoloCard>
                 <div className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-cyan-300" />
                   <div>
@@ -458,7 +327,7 @@ export function PortfolioShell() {
                 </div>
               </HoloCard>
             </a>
-            <HoloCard delay={0.1}>
+            <HoloCard>
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-cyan-300" />
                 <div>
@@ -469,7 +338,7 @@ export function PortfolioShell() {
                 </div>
               </div>
             </HoloCard>
-            <HoloCard delay={0.15}>
+            <HoloCard>
               <div className="flex flex-wrap items-center gap-5">
                 <a
                   href={social.github}
@@ -500,10 +369,12 @@ export function PortfolioShell() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10 bg-black/30 py-8 text-center font-mono text-[11px] text-slate-500 backdrop-blur">
+      <QuickContactDock />
+
+      <footer className="relative z-10 border-t border-white/10 bg-black/40 py-8 text-center font-mono text-[11px] text-slate-500">
         <span suppressHydrationWarning>
-          © {new Date().getFullYear()} {about.fullName} · {withImages.length}{" "}
-          visual case studies · Ask the assistant
+          © {new Date().getFullYear()} {about.fullName} · {domainCount} domains
+          · {visualCount} visual case studies
         </span>
       </footer>
     </div>

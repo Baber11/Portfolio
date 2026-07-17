@@ -9,14 +9,19 @@ export const PhoneFrame = memo(function PhoneFrame({
   alt,
   priority,
   className = "",
+  size = "md",
 }: {
   src: string;
   alt: string;
   priority?: boolean;
   className?: string;
+  /** md = project cards, lg = Work showcase (responsive) */
+  size?: "md" | "lg";
 }) {
+  const widthClass = size === "lg" ? "work-phone-lg" : "max-w-[220px]";
+
   return (
-    <div className={`relative mx-auto w-full max-w-[220px] ${className}`}>
+    <div className={`relative mx-auto w-full ${widthClass} ${className}`}>
       <div className="pointer-events-none absolute -inset-4 hidden rounded-[2.5rem] bg-cyan-400/15 blur-2xl md:block" />
       <div className="relative overflow-hidden rounded-[1.75rem] border border-white/20 bg-[#020617] p-[7px] shadow-[0_12px_32px_rgba(0,0,0,0.45)] md:shadow-[0_20px_50px_rgba(0,0,0,0.55),0_0_40px_rgba(34,211,238,0.18)]">
         <div className="absolute left-1/2 top-2.5 z-20 h-4 w-20 -translate-x-1/2 rounded-full bg-black/95" />
@@ -28,7 +33,11 @@ export const PhoneFrame = memo(function PhoneFrame({
             priority={priority}
             loading={priority ? undefined : "lazy"}
             className="object-cover object-top"
-            sizes="(max-width: 768px) 40vw, 220px"
+            sizes={
+              size === "lg"
+                ? "(max-width: 768px) 55vw, (max-width: 1280px) 280px, 300px"
+                : "(max-width: 768px) 40vw, 220px"
+            }
             quality={70}
           />
         </div>
