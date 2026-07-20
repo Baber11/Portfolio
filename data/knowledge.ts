@@ -26,11 +26,11 @@ export const knowledge: KnowledgeBase = {
       startDate: "Dec 2023",
       endDate: "Present",
       description:
-        "Leads React Native and full-product engineering teams across multiple client projects, owning architecture, planning, code reviews, and deployments.",
+        "Lead a team of 4 engineers delivering 5 client products in logistics, retail POS, and AI surveillance.",
       highlights: [
-        "Owns project architecture, development planning, code reviews and deployments",
-        "Coordinates directly with stakeholders and clients for successful delivery",
-        "Mentors developers and establishes team-wide development standards",
+        "Own architecture, sprint planning, and code reviews for releases covering 2 live venue deployments",
+        "Coordinate delivery for logistics, retail POS, and AI surveillance at California and Broadway",
+        "Mentor 3 developers and run structured code reviews on every release cycle",
       ],
     },
     {
@@ -40,10 +40,10 @@ export const knowledge: KnowledgeBase = {
       startDate: "Dec 2022",
       endDate: "Dec 2023",
       description:
-        "Developed and deployed multiple production-grade mobile applications with end-to-end architecture ownership.",
+        "Designed end-to-end architecture and shipped 4 React Native apps to the Apple App Store and Google Play Store in 12 months.",
       highlights: [
-        "Designed system workflows and end-to-end application architecture",
-        "Integrated payment gateways, chat systems, streaming and mapping solutions",
+        "Designed system workflows and end-to-end application architecture for 4 shipped products",
+        "Integrated payment gateways, chat, streaming, and maps into 5 client products",
       ],
     },
     {
@@ -53,9 +53,9 @@ export const knowledge: KnowledgeBase = {
       startDate: "Mar 2022",
       endDate: "Dec 2022",
       description:
-        "Built fintech, healthcare, multilingual and e-commerce applications with Firebase and third-party APIs.",
+        "Delivered 3 React Native apps across fintech, healthcare, and e-commerce in 10 months.",
       highlights: [
-        "Integrated Firebase services, authentication, notifications and third-party APIs",
+        "Implemented Firebase Auth, push notifications, and REST API integrations for every release build",
       ],
     },
     {
@@ -65,9 +65,10 @@ export const knowledge: KnowledgeBase = {
       startDate: "Nov 2020",
       endDate: "Feb 2022",
       description:
-        "Progressed from intern to a professional mobile development role, contributing to hybrid mobile application development and maintenance.",
+        "Earned promotion from Intern to Associate Developer in 15 months while building and maintaining 2 hybrid mobile applications.",
       highlights: [
-        "Contributed to hybrid mobile application development and maintenance",
+        "Earned promotion from Intern to Associate Developer in 15 months",
+        "Built and maintained 2 hybrid mobile applications used by active client stakeholders",
       ],
     },
   ],

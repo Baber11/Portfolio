@@ -185,17 +185,17 @@ def main():
     story.append(Paragraph("Senior Mobile Application Developer  |  Team Lead", styles["title"]))
     story.append(
         Paragraph(
-            "React Native  ·  Next.js  ·  Angular  ·  AI Systems  ·  6+ Years",
+            "React Native  |  Next.js  |  Angular  |  AI Systems  |  6+ Years",
             styles["tagline"],
         )
     )
     story.append(
         Paragraph(
-            "Karachi, Pakistan  ·  +92 329 2297354  ·  syedbaber115@gmail.com<br/>"
+            "Karachi, Pakistan  |  +92 329 2297354  |  syedbaber115@gmail.com<br/>"
             "Portfolio: "
             '<link href="https://portfolio-eight-wine-57.vercel.app/">'
             "portfolio-eight-wine-57.vercel.app</link><br/>"
-            "linkedin.com/in/syed-baber-ali-106831222  ·  github.com/Baber11",
+            "linkedin.com/in/syed-baber-ali-106831222  |  github.com/Baber11",
             styles["contact"],
         )
     )
@@ -204,13 +204,12 @@ def main():
     story += section("Professional Summary", styles)
     story.append(
         Paragraph(
-            "Results-driven Senior Mobile Application Developer and Team Lead with 6+ years of "
-            "experience delivering production-grade cross-platform mobile applications using "
-            "<b>React Native</b>, modern web platforms with <b>Next.js</b>, and enterprise "
-            "<b>Angular</b> systems. Proven track record across healthcare, logistics, fintech, "
-            "ride-hailing, e-commerce, facilities management, retail POS, and <b>AI surveillance</b>. "
-            "Experienced in leading teams, owning architecture, integrating third-party services, "
-            "and shipping App Store / Play Store products from concept to production.",
+            "Senior Mobile Application Developer and Team Lead with 6+ years of experience "
+            "building cross-platform products in <b>React Native</b>, <b>Next.js</b>, and "
+            "<b>Angular</b>. Delivered 20+ commercial applications across healthcare, logistics, "
+            "fintech, ride-hailing, e-commerce, facilities management, retail POS, and "
+            "<b>AI surveillance</b>. Skilled at leading engineering teams, owning architecture, "
+            "and shipping releases to the Apple App Store and Google Play Store.",
             styles["body"],
         )
     )
@@ -219,28 +218,28 @@ def main():
     story += section("Technical Skills", styles)
     story.append(
         Paragraph(
-            "<b>Mobile &amp; Frontend:</b> React Native, TypeScript, JavaScript, React.js, "
+            "<b>Mobile and Frontend:</b> React Native, TypeScript, JavaScript, React.js, "
             "Next.js, Angular, Redux Toolkit, Electron",
             styles["skills"],
         )
     )
     story.append(
         Paragraph(
-            "<b>Backend &amp; Services:</b> REST APIs, Firebase (Auth, Firestore, Notifications), "
+            "<b>Backend and Services:</b> REST APIs, Firebase (Auth, Firestore, Notifications), "
             "Payment Gateways, Google Maps, Agora, CometChat",
             styles["skills"],
         )
     )
     story.append(
         Paragraph(
-            "<b>AI &amp; Domains:</b> AI / Computer Vision surveillance systems, "
+            "<b>AI and Domains:</b> AI and Computer Vision surveillance systems, "
             "enterprise retail POS, logistics platforms, healthcare workflows",
             styles["skills"],
         )
     )
     story.append(
         Paragraph(
-            "<b>Tooling:</b> Git / GitHub, Android Studio, Xcode, Agile / Scrum, Vercel",
+            "<b>Tooling:</b> Git, GitHub, Android Studio, Xcode, Agile, Scrum, Vercel",
             styles["skills"],
         )
     )
@@ -250,35 +249,36 @@ def main():
 
     roles = [
         (
-            "Team Lead — Mobile Applications",
-            "VirtueXolutions  ·  Dec 2023 – Present",
+            "Team Lead - Mobile Applications",
+            "VirtueXolutions  |  Dec 2023 - Present",
             [
-                "Lead React Native engineering teams across multiple client products; own architecture, planning, code reviews, and releases.",
-                "Coordinate with stakeholders on delivery for logistics, retail POS, AI surveillance, and enterprise mobile systems.",
-                "Mentor developers and establish coding standards, CI-ready workflows, and scalable project structure.",
+                "Lead a team of 4 engineers delivering 5 client products in logistics, retail POS, and AI surveillance.",
+                "Own architecture, sprint planning, and code reviews for releases covering 2 live venue deployments (California and Broadway).",
+                "Mentor 3 developers and run structured code reviews on every release cycle.",
             ],
         ),
         (
             "Senior React Native Developer",
-            "VirtueXolutions  ·  Dec 2022 – Dec 2023",
+            "VirtueXolutions  |  Dec 2022 - Dec 2023",
             [
-                "Designed end-to-end application architecture and shipped production-grade mobile products.",
-                "Integrated payment gateways, real-time chat, live streaming, and mapping solutions.",
+                "Designed end-to-end architecture and shipped 4 React Native apps to the Apple App Store and Google Play Store in 12 months.",
+                "Integrated payment gateways, real-time chat, live streaming, and maps into 5 client products.",
             ],
         ),
         (
             "React Native Developer",
-            "TAFSOL  ·  Mar 2022 – Dec 2022",
+            "TAFSOL  |  Mar 2022 - Dec 2022",
             [
-                "Built fintech, healthcare, multilingual, and e-commerce applications.",
-                "Implemented Firebase authentication, push notifications, and third-party API integrations.",
+                "Delivered 3 React Native apps across fintech, healthcare, and e-commerce in 10 months.",
+                "Implemented Firebase Auth, push notifications, and REST API integrations for every release build.",
             ],
         ),
         (
             "Associate Developer",
-            "SAS Solution  ·  Nov 2020 – Feb 2022",
+            "SAS Solution  |  Nov 2020 - Feb 2022",
             [
-                "Progressed from intern to professional developer contributing to hybrid mobile application development and maintenance.",
+                "Earned promotion from Intern to Associate Developer in 15 months.",
+                "Built and maintained 2 hybrid mobile applications used by active client stakeholders.",
             ],
         ),
     ]
@@ -295,44 +295,44 @@ def main():
 
     projects = [
         (
-            "<b>AI Surveillance System</b> — Intelligent video monitoring currently implemented at "
-            "<b>California</b> and <b>Broadway</b> venues; computer-vision assisted enterprise surveillance workflows."
+            "<b>AI Surveillance System</b> - Intelligent video monitoring live at "
+            "<b>California</b> and <b>Broadway</b> venues with computer vision workflows."
         ),
         (
-            "<b>Order Intel POS</b> (Angular · Electron roadmap) — Multi-brand point-of-sale frontend for "
-            "<b>Costa Coffee</b>, <b>Broadway</b>, and <b>California</b>; designed for Electron Windows EXE packaging. "
+            "<b>Order Intel POS</b> (Angular, Electron roadmap) - Multi-brand point-of-sale frontend for "
+            "<b>Costa Coffee</b>, <b>Broadway</b>, and <b>California</b>, prepared for Windows desktop packaging. "
             "Demo: pos-frontend-rdsr.vercel.app/pos"
         ),
         (
-            "<b>FleetEx Logistics</b> (Next.js) — International freight &amp; supply chain company website. "
+            "<b>FleetEx Logistics</b> (Next.js) - International freight and supply chain company website. "
             "fleetexlogistics.com"
         ),
         (
-            "<b>Rapid Express Logistics</b> (Next.js) — Domestic &amp; international logistics platform with client portal. "
+            "<b>Rapid Express Logistics</b> (Next.js) - Domestic and international logistics platform with client portal. "
             "rapidexpresslogistic.com"
         ),
         (
-            "<b>LookClean</b> — Barber booking &amp; e-commerce app live on "
-            "<b>App Store</b> and <b>Google Play</b>."
+            "<b>LookClean</b> - Barber booking and e-commerce app live on the "
+            "<b>Apple App Store</b> and <b>Google Play</b>."
         ),
         (
-            "<b>Facilitate</b> — Facilities / work-order management app live on "
-            "<b>App Store</b> and <b>Google Play</b>."
+            "<b>Facilitate</b> - Facilities and work order management app live on the "
+            "<b>Apple App Store</b> and <b>Google Play</b>."
         ),
         (
-            "<b>RideLynk</b> — Ride-hailing platform (User &amp; Rider apps) with real-time tracking and payments — Google Play."
+            "<b>RideLynk</b> - Ride-hailing platform (User and Rider apps) with real-time tracking and payments on Google Play."
         ),
         (
-            "<b>Daweeye</b> — Multilingual healthcare and hospital management platform."
+            "<b>Daweeye</b> - Multilingual healthcare and hospital management platform."
         ),
         (
-            "<b>HatchSocial</b> — Social network with chat and live streaming (Agora / CometChat)."
+            "<b>HatchSocial</b> - Social network with chat and live streaming (Agora and CometChat)."
         ),
         (
-            "<b>Indoor Positioning App</b> — BLE-based indoor navigation for Dubai malls."
+            "<b>Indoor Positioning App</b> - Bluetooth Low Energy indoor navigation for Dubai malls."
         ),
         (
-            "<b>EndorseMe</b> — US-based freelance marketplace platform."
+            "<b>EndorseMe</b> - US-based freelance marketplace platform."
         ),
     ]
     for p in projects:
@@ -341,11 +341,11 @@ def main():
     # Highlights
     story += section("Highlights", styles)
     for h in [
-        "5+ years building and shipping commercial mobile and web products",
-        "Apps published on both Apple App Store and Google Play Store",
-        "AI surveillance deployed in production venues (California & Broadway)",
-        "POS architecture prepared for Electron desktop distribution",
-        "Team leadership with stakeholder communication and delivery ownership",
+        "6+ years building and shipping commercial mobile and web products",
+        "20+ commercial applications delivered across mobile and web platforms",
+        "Apps published on both the Apple App Store and Google Play Store",
+        "AI surveillance deployed at 2 production venues (California and Broadway)",
+        "POS system designed for 3 retail brands and Electron desktop distribution",
     ]:
         story.append(bullet(h, styles))
 
